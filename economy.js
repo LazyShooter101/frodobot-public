@@ -19,29 +19,29 @@ bot.on('ready', () => {
 });
 
 bot.on("message", function(msg) {
-    if (msg.author.id == FRODO_ID) {
-        if (msg.content.substring(0, PREFIX.length).toUpperCase() != PREFIX || msg.author.id == BOT_ID) {
-            return;
-        }
+    if (msg.content.substring(0, PREFIX.length).toUpperCase() != PREFIX || msg.author.id == BOT_ID) {
+        return;
+    }
 
-        let args = msg.content.substring(PREFIX.length).split(" ");
-        let numArgs = args.length;
+    let args = msg.content.substring(PREFIX.length).split(" ");
+    let numArgs = args.length;
 
-        switch (args[0]) {
-            case "outputUserVars":
-                msg.channel.send(JSON.stringify(userVars));
-                break;
-            case "add1":
-                //If user has not been initialised, initialise them.
-                if (!userVars[msg.author.id]) {
-                    userVars[msg.author.id] = {"score": 0}
-                }
-                userVars[msg.author.id].score++;
-                break;
-            case "save":
-                let data = JSON.stringify(userVars);
-                fs.writeFileSync(jsonPath, data);
-        }
+    switch (args[0]) {
+        case "bal":
+            msg.channel.send(":white_check_mark: <@{0}>You have {1} coins!".format(msg.author.id, userVars[msg.author.id].coins));
+            break;
+        case "add1":
+            //If user has not been initialised, initialise them.
+            if (!userVars[msg.author.id]) {
+                userVars[msg.author.id] = {"coins": 0}
+            }
+            userVars[msg.author.id].score++;
+            msg.channel.send(":white_check_mark: <@{0}>, you gained 1 coin for a total of {1} coins!".format(msg.author.id, userVars[msg.author.id].coins));
+            break;
+        case "save":
+            let data = JSON.stringify(userVars);
+            fs.writeFileSync(jsonPath, data);
+            msg.channel.send(":white_check_mark: Worldwide coins saved.")
     }
 });
 
